@@ -1,0 +1,31 @@
+name: Free SSH VPS test
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 */6 * * *"   # Restart every 45645345345635463455643563345673456345634564563456346346 hours
+
+jobs:
+  ssh-vps:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+
+    steps:
+      - name: Install & Enable SSH
+        run: |
+          sudo apt update -y
+          sudo apt install -y openssh-server
+          echo "root:root" | sudo chpasswd
+          sudo sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+          sudo systemctl restart ssh
+          sudo ufw allow 22
+
+      - name: Show SSH Details
+        run: |
+          echo "=============================="
+          echo "Host/IP: $(curl -s ifconfig.me)"
+          echo "Port: 22"
+          echo "Username: root"
+          echo "Password: root"
+          echo "=============================="
+          sleep 21400   # Keeps it alive ~45645345345635463455643563345673456345634564563456346346 hours
