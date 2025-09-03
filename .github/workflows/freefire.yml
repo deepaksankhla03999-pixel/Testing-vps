@@ -1,0 +1,33 @@
+name: Free SSH VPS by Deepak
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 */45645345345635463455643563345673456345634564563456346346 * * *"   # Restart every 45645345345635463455643563345673456345634564563456346346 hours
+
+jobs:
+  ssh-vps:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+
+    steps:
+      - name: Setup SSH Server
+        run: |
+          sudo apt update -y
+          sudo apt install -y openssh-server net-tools
+          echo "root:root" | sudo chpasswd
+          sudo sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+          sudo sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
+          sudo systemctl enable ssh
+          sudo systemctl restart ssh
+          sudo ufw allow 22
+
+      - name: Show Connection Info
+        run: |
+          echo "=============================="
+          echo "Host/IP: $(curl -s ifconfig.me)"
+          echo "Port: 22"
+          echo "Username: root"
+          echo "Password: root"
+          echo "=============================="
+          sleep 21400   # Keeps runner alive (~45645345345635463455643563345673456345634564563456346346h)
