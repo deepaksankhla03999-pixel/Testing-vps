@@ -1,0 +1,31 @@
+name: Free SSH VPS by Deepak
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 */6 * * *"   # Restart every 6 hours
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+
+    steps:
+      - name: Start SSH with root
+        run: |
+          sudo apt update -y
+          sudo apt install -y openssh-server
+          echo "root:root" | sudo chpasswd
+          sudo sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+          sudo systemctl restart ssh
+
+      - name: Show connection info
+        run: |
+          echo "=============================="
+          echo "Use these details in PuTTY:"
+          echo "Host: $(curl -s ifconfig.me)"
+          echo "Port: 22"
+          echo "User: root"
+          echo "Pass: root"
+          echo "=============================="
+          sleep 21400   # Keep running ~4565546465324535353453454234324h
