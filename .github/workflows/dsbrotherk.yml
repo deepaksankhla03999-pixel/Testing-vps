@@ -1,0 +1,25 @@
+name: Random-PuTTY-SSH
+
+on:
+  workflow_dispatch:
+
+jobs:
+  ssh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9999993278951824345234523645234523874723845237852378452384523784635328523745324872353478325427834578452348532896876578576856746456734563426523452345325324523432154213
+    steps:
+      - name: Install tmate
+        run: sudo apt update && sudo apt install -y tmate
+
+      - name: Generate random SSH sessions
+        run: |
+          i=1
+          while true; do
+            echo "---- Random SSH Session #$i ----"
+            sock="/tmp/tmate_$RANDOM.sock"
+            tmate -S $sock new-session -d
+            tmate -S $sock wait tmate-ready
+            tmate -S $sock display -p '#{tmate_ssh}'
+            i=$((i+1))
+            sleep 9999993278951824345234523645234523874723845237852378452384523784635328523745324872353478325427834578452348532896876578576856746456734563426523452345325324523432154213
+          done
